@@ -16,7 +16,7 @@ def generate_text():
     if request.method == 'POST':
         link = request.form.get('url')
         
-        # First, generate the summary
+        
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=f"""
@@ -271,7 +271,7 @@ It's 11.18,100.3 degrees, and I'm done.
         
         summary = response.text
         
-        # Second, generate flashcards with clearer instructions
+       
         flashcard_response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=f"""
@@ -290,32 +290,32 @@ It's 11.18,100.3 degrees, and I'm done.
         
         print("Raw flashcard response:", flashcard_response.text)
         
-        # Parse the flashcards properly
+        
         flashcards = []
         try:
-            # Extract JSON from the response text
+            
             json_text = flashcard_response.text.strip()
             
-            # Remove markdown code block formatting if present
+            
             if json_text.startswith('```json'):
-                json_text = json_text[7:]  # Remove ```json
+                json_text = json_text[7:] 
             if json_text.endswith('```'):
-                json_text = json_text[:-3]  # Remove ```
+                json_text = json_text[:-3]
             
             json_text = json_text.strip()
             
-            # Parse the JSON
+            
             flashcards = json.loads(json_text)
             
-            # Ensure we have exactly 5 flashcards
-            flashcards = flashcards[:5]  # Take only first 5
+            
+            flashcards = flashcards[:5] 
             
             print("Parsed flashcards:", flashcards)
             
         except json.JSONDecodeError as e:
             print(f"JSON parsing error: {e}")
             print(f"Raw text: {flashcard_response.text}")
-            # Fallback flashcards if parsing fails
+            
             flashcards = [
                 {"question": "What is the formula to convert from polar to rectangular coordinates?", 
                  "answer": "x = r*cos(θ) and y = r*sin(θ)"},
